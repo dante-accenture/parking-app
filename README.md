@@ -119,4 +119,11 @@ try {
 
 ?>
 ```
-https://www.ilblogdiunprogrammatore.it/38633-configurare-xampp-per-inviare-email-con-gmail.html
+
+# Tutorial google
+
+1. Attiva l'auteticazione a due fattori nella tab sicurezza
+2. Un volta attivata andare in sicurezza > password per le app
+3. Selezionare come app Posta e come dispositivo Altro
+4. Scegliere un nome e cliccare su genera
+5. Utilizzare la password generata per fare il login con PHPMailer
