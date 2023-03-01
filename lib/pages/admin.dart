@@ -36,7 +36,11 @@ class _AdminViewState extends State<AdminView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Parcheggio Admin"),
+        backgroundColor: Colors.white60,
+        title:  Container(
+          width: 300,
+          child: Image.asset('lib/assets/logo-3.png', ),
+        ),
         centerTitle: true,
         automaticallyImplyLeading: false,
         actions: [
@@ -45,6 +49,7 @@ class _AdminViewState extends State<AdminView> {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => HomeParking(true)));
               },
+              color: Colors.blue[900],
               icon: const Icon(Icons.add))
         ],
       ),
@@ -93,6 +98,7 @@ class _AdminViewState extends State<AdminView> {
                               style: const TextStyle(fontSize: 20))),
                           DataCell(
                               const Text("Clicca per modificare",
+                                  overflow: TextOverflow.ellipsis,
                                   style: TextStyle(fontSize: 20)),
                               showEditIcon: true, onTap: () {
                             Navigator.pop(context);
@@ -100,10 +106,19 @@ class _AdminViewState extends State<AdminView> {
                                 arguments: snapshot.data![index]);
                           }),
                           DataCell(
-                              const Icon(
-                                Icons.delete,
-                                color: Colors.red,
-                                size: 20,
+                              Row(
+                                children: const [
+                                  Expanded(
+                                    child: Text("Clicca per eliminare",
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(fontSize: 20)),
+                                  ),
+                                  Icon(
+                                    Icons.delete,
+                                    color: Colors.red,
+                                    size: 20,
+                                  ),
+                                ],
                               ), onTap: () async {
                             showDialog<String>(
                                 context: context,

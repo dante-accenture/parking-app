@@ -6,9 +6,6 @@ import '../controller/database.dart';
 import '../model/db_model.dart';
 import 'admin.dart';
 
-
-
-
 class EditPage extends StatefulWidget {
   TargaModel targaModel;
 
@@ -30,9 +27,9 @@ class _EditPageState extends State<EditPage> {
     setState(() {
       targaController.text = widget.targaModel.targa;
       entrtaController.text = widget.targaModel.dataEntrata;
-      if(uscitaController.text == "null" || uscitaController.text.isEmpty){
+      if (uscitaController.text == "null" || uscitaController.text.isEmpty) {
         uscitaController.text = "";
-      }else{
+      } else {
         uscitaController.text = widget.targaModel.dataUscita!;
       }
     });
@@ -42,25 +39,29 @@ class _EditPageState extends State<EditPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Parcheggio Modifica"),
+        backgroundColor: Colors.white60,
+        title: Container(
+          width: 300,
+          child: Image.asset(
+            'lib/assets/logo-3.png',
+          ),
+        ),
         centerTitle: true,
-        leading: IconButton(onPressed: () {
-          Navigator.pop(context);
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const AdminView()));
-        }, icon: const Icon(Icons.arrow_back_ios_new)),
+        leading: IconButton(
+            color: Colors.blue[900],
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const AdminView()));
+            },
+            icon: const Icon(Icons.arrow_back_ios_new)),
       ),
       body: WillPopScope(
         onWillPop: () async {
           Navigator.pop(context);
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const AdminView()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const AdminView()));
           return true;
-
         },
         child: Form(
             child: Column(
@@ -78,7 +79,10 @@ class _EditPageState extends State<EditPage> {
                     controller: targaController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      label: Text('Targa'),
+                      label: Text(
+                        'Targa',
+                        style: TextStyle(color: Colors.black),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 30),
@@ -86,7 +90,10 @@ class _EditPageState extends State<EditPage> {
                     controller: entrtaController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      label: Text('Data Entrata'),
+                      label: Text(
+                        'Data Entrata',
+                        style: TextStyle(color: Colors.black),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 30),
@@ -94,7 +101,10 @@ class _EditPageState extends State<EditPage> {
                     controller: uscitaController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      label: Text('Data Uscita'),
+                      label: Text(
+                        'Data Uscita',
+                        style: TextStyle(color: Colors.black),
+                      ),
                     ),
                   ),
                 ],
@@ -105,10 +115,12 @@ class _EditPageState extends State<EditPage> {
               mainAxisSize: MainAxisSize.max,
               children: [
                 ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue[900]),
                     onPressed: () async {
                       if (targaController.text.isNotEmpty &&
                           entrtaController.text.isNotEmpty) {
-                        try{
+                        try {
                           await updateFullTarga(
                               id: widget.targaModel.id!,
                               dataEntrata: entrtaController.text,
@@ -116,13 +128,15 @@ class _EditPageState extends State<EditPage> {
                               dataUscita: uscitaController.text.isEmpty == true
                                   ? "null"
                                   : uscitaController.text);
-                        }on MySqlException catch(e){
+                        } on MySqlException catch (e) {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => ErrorPage(message: e.message)));
+                                  builder: (context) =>
+                                      ErrorPage(message: e.message)));
                         }
-                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
                           content: Text("Dati aggiornati correttamente"),
                         ));
                         Navigator.pop(context);

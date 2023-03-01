@@ -13,28 +13,25 @@ void main() {
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
 
     return MaterialApp(
-      title: '3EM Parking',
-      navigatorKey: navigatorKey,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+        title: '3EM Parking',
+        navigatorKey: navigatorKey,
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
         routes: {
-          "/":(context) => const SelectUserPage(),
-          "/user":(context) => HomeParking(false),
-
+          "/": (context) => const SelectUserPage(),
+          "/user": (context) => HomeParking(false),
         },
         onGenerateRoute: (settings) {
           if (settings.name == "/edit") {
@@ -47,8 +44,6 @@ class MyApp extends StatelessWidget {
             );
           }
           return null;
-        }
-    );
+        });
   }
 }
-

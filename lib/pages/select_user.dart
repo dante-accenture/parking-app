@@ -14,7 +14,15 @@ class _SelectUserPageState extends State<SelectUserPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Seleziona il tipo di utenza"),
+        backgroundColor: Colors.white60,
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Image.asset('lib/assets/logo-tondo.png'),
+        ),
+        title: Text(
+          "Seleziona il tipo di utenza",
+          style: TextStyle(color: Colors.blue[900]),
+        ),
         centerTitle: true,
       ),
       body: Scaffold(
@@ -23,19 +31,29 @@ class _SelectUserPageState extends State<SelectUserPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              ElevatedButton(onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomeParking(false)),
-                );
-              }, child: const Text("UTENTE", style: TextStyle(fontSize: 20))),
+              ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue[900]),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => HomeParking(false)),
+                    );
+                  },
+                  child: const Text("UTENTE", style: TextStyle(fontSize: 20))),
               const SizedBox(height: 30),
-              ElevatedButton(onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const AdminView()),
-                );
-              }, child: const Text("ADMIN", style: TextStyle(fontSize: 20))),
+              ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue[900]),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const AdminView()),
+                    );
+                  },
+                  child: const Text("ADMIN", style: TextStyle(fontSize: 20))),
             ],
           ),
         ),

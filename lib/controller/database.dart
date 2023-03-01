@@ -61,8 +61,9 @@ Future<void> updateFullTarga(
     required String targa}) async {
   var conn = await getDBConn();
 
-  await conn
-      .query('UPDATE targhe SET dataUscita=? where id=?', [dataUscita, id]);
+  await conn.query(
+      'UPDATE targhe SET targa=?, dataEntrata=?, dataUscita=? where id=?',
+      [targa, dataEntrata, dataUscita, id]);
   await conn.close();
 }
 
@@ -93,6 +94,9 @@ Future<List<TargaModel>> getTarghe() async {
 // controlla se una trga è gia uscita
 Future<void> checkTarga(String targaDaControllare) async {
   var conn = await getDBConn();
+  DateTime now = DateTime.now();
+  String actualDate =
+      "${now.day}-${now.month}-${now.year} ${now.hour}:${now.minute}:${now.second}";
 
   // ritorna righe con quella targa
   var results = await conn
@@ -118,7 +122,7 @@ Future<void> checkTarga(String targaDaControllare) async {
       if (targa.toUpperCase() == targaDaControllare.toUpperCase() &&
           dataUscita == "null") {
         // aggiorna la targa
-        await updateTarga(id, "20-20-1999");
+        await updateTarga(id, actualDate);
         debugPrint("targa aggiornata");
         lastIsFilled = false;
         return;
@@ -126,12 +130,12 @@ Future<void> checkTarga(String targaDaControllare) async {
     }
     // non sono presenti date da aggiornare
     if (lastIsFilled == true) {
-      await inserTarga(targaDaControllare.toUpperCase(), "2023");
+      await inserTarga(targaDaControllare.toUpperCase(), actualDate);
       debugPrint("targa inserita");
     }
   } else {
     // nessuna targa trovata, inserisce la targa
-    await inserTarga(targaDaControllare.toUpperCase(), "dataEntrata");
+    await inserTarga(targaDaControllare.toUpperCase(), actualDate);
   }
   await conn.close();
 }

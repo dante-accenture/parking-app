@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:mysql1/mysql1.dart';
 import 'package:parking_app/controller/database.dart';
+import 'package:parking_app/kayboard/keyboard.dart';
 
+import '../main.dart';
+import 'admin.dart';
 import 'error.dart';
+
+TextEditingController targaController = TextEditingController();
+final formKey = GlobalKey<FormState>();
 
 class HomeParking extends StatefulWidget {
   bool canPop;
@@ -14,13 +20,12 @@ class HomeParking extends StatefulWidget {
 }
 
 class _HomeParkingState extends State<HomeParking> {
-  TextEditingController targaController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
   FocusNode focus = FocusNode();
 
   @override
   void initState() {
     super.initState();
+    focus.requestFocus();
   }
 
   @override
@@ -28,10 +33,14 @@ class _HomeParkingState extends State<HomeParking> {
     return Scaffold(
       backgroundColor: const Color(0xffffffff),
       appBar: AppBar(
+        backgroundColor: Colors.white60,
         elevation: 4,
         centerTitle: true,
         automaticallyImplyLeading: false,
-        title: const Text(
+        title: Container(
+          width: 300,
+          child: Image.asset('lib/assets/logo-3.png', ),
+        ),/*const Text(
           "Parcheggio",
           style: TextStyle(
             fontWeight: FontWeight.w400,
@@ -39,7 +48,7 @@ class _HomeParkingState extends State<HomeParking> {
             fontSize: 20,
             color: Color.fromARGB(255, 255, 255, 255),
           ),
-        ),
+        ),*/
       ),
       body: WillPopScope(
         onWillPop: () async {
@@ -48,7 +57,7 @@ class _HomeParkingState extends State<HomeParking> {
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -60,7 +69,7 @@ class _HomeParkingState extends State<HomeParking> {
                       fontSize: 25)),
               const SizedBox(height: 20),
               Form(
-                key: _formKey,
+                key: formKey,
                 child: TextFormField(
                   controller: targaController,
                   textAlign: TextAlign.center,
@@ -111,27 +120,29 @@ class _HomeParkingState extends State<HomeParking> {
                     }
                   },
                   onFieldSubmitted: (value) async {
-                    if (_formKey.currentState!.validate()) {
-                      focus.requestFocus();
-                      targaController.clear();
-
+                    if (formKey.currentState!.validate()) {
                       try {
                         await checkTarga(targaController.text);
-
-                      } on MySqlException catch (e) {
-                        Navigator.push(
-                            context,
+                        targaController.clear();
+                        navigatorKey.currentState!.pop();
+                        navigatorKey.currentState!.pushReplacement(
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    ErrorPage(message: e.message)));
+                                builder: (context) => const AdminView()));
+                      } on MySqlException catch (e) {
+                        navigatorKey.currentState!.push(MaterialPageRoute(
+                            builder: (context) =>
+                                ErrorPage(message: e.message)));
                       }
                     }
                   },
                 ),
               ),
               const SizedBox(height: 20),
-              const Text("Premi INVIO per confermare",
+              const Text("Premi INVIO per confermare e CANC. per eliminare",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
+              widget.canPop == true
+                  ? const SizedBox.shrink()
+                  : VirtualKeyboard(),
             ],
           ),
         ),
