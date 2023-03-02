@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mysql1/mysql1.dart';
+import 'package:parking_app/controller/database_api.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-import '../controller/database.dart';
 import '../main.dart';
-import '../pages/error.dart';
 import '../pages/home.dart';
 import 'input_control.dart';
 import 'layout.dart';
@@ -130,28 +128,23 @@ void handleBackspace() {
 
 void handleEnter() async {
   if (formKey.currentState!.validate()) {
-    try {
-      await checkTarga(targaController.text);
-      targaController.clear();
-      Alert(
-        context: navigatorKey.currentContext!,
-        type: AlertType.success,
-        title: "TARGA INSERITA!!",
-        desc: "Targa inserita correttamente.",
-        buttons: [
-          DialogButton(
-            onPressed: () => Navigator.pop(navigatorKey.currentContext!),
-            width: 120,
-            child: const Text(
-              "OK",
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            ),
-          )
-        ],
-      ).show();
-    } on MySqlException catch (e) {
-      navigatorKey.currentState!.push(MaterialPageRoute(
-          builder: (context) => ErrorPage(message: e.message)));
-    }
+    await checkTargaApi(targaController.text);
+    targaController.clear();
+    Alert(
+      context: navigatorKey.currentContext!,
+      type: AlertType.success,
+      title: "TARGA INSERITA!!",
+      desc: "Targa inserita correttamente.",
+      buttons: [
+        DialogButton(
+          onPressed: () => Navigator.pop(navigatorKey.currentContext!),
+          width: 120,
+          child: const Text(
+            "OK",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+        )
+      ],
+    ).show();
   }
 }

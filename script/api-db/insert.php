@@ -14,13 +14,13 @@ if (isset($_POST["targa"]) && isset($_POST["dataEntrata"])) {
   $dataE = $_POST["dataEntrata"];
   
   $sql = "INSERT INTO targhe (targa, dataEntrata, dataUscita)
-VALUES ('" . $targa . "', '" . $dataE . "', '";
+VALUES ('" . $targa . "', '" . $dataE . "', ";
 
   if (isset($_POST["dataUscita"])) {
     $dataU = $_POST["dataUscita"];
-    $sql .= $dataU . "')";
+    $sql .= "'" . $dataU . "')";
   } else {
-    $sql .= "NULL')";
+    $sql .= "null)";
   }
 
   if (mysqli_query($conn, $sql)) {

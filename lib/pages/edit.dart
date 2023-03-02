@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mysql1/mysql1.dart';
+import 'package:parking_app/controller/database_api.dart';
 import 'package:parking_app/pages/error.dart';
 
-import '../controller/database.dart';
 import '../model/db_model.dart';
 import 'admin.dart';
 
@@ -27,11 +27,9 @@ class _EditPageState extends State<EditPage> {
     setState(() {
       targaController.text = widget.targaModel.targa;
       entrtaController.text = widget.targaModel.dataEntrata;
-      if (uscitaController.text == "null" || uscitaController.text.isEmpty) {
-        uscitaController.text = "";
-      } else {
-        uscitaController.text = widget.targaModel.dataUscita!;
-      }
+      uscitaController.text = widget.targaModel.dataUscita == "null"
+          ? ""
+          : widget.targaModel.dataUscita!;
     });
   }
 
@@ -40,7 +38,7 @@ class _EditPageState extends State<EditPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white60,
-        title: Container(
+        title: SizedBox(
           width: 300,
           child: Image.asset(
             'lib/assets/logo-3.png',
@@ -121,8 +119,8 @@ class _EditPageState extends State<EditPage> {
                       if (targaController.text.isNotEmpty &&
                           entrtaController.text.isNotEmpty) {
                         try {
-                          await updateFullTarga(
-                              id: widget.targaModel.id!,
+                          await updateFullTargaApi(
+                              id: widget.targaModel.id,
                               dataEntrata: entrtaController.text,
                               targa: targaController.text,
                               dataUscita: uscitaController.text.isEmpty == true

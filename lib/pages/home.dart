@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mysql1/mysql1.dart';
-import 'package:parking_app/controller/database.dart';
 import 'package:parking_app/kayboard/keyboard.dart';
 
+import '../controller/database_api.dart';
 import '../main.dart';
 import 'admin.dart';
 import 'error.dart';
@@ -39,8 +39,10 @@ class _HomeParkingState extends State<HomeParking> {
         automaticallyImplyLeading: false,
         title: Container(
           width: 300,
-          child: Image.asset('lib/assets/logo-3.png', ),
-        ),/*const Text(
+          child: Image.asset(
+            'lib/assets/logo-3.png',
+          ),
+        ), /*const Text(
           "Parcheggio",
           style: TextStyle(
             fontWeight: FontWeight.w400,
@@ -122,7 +124,7 @@ class _HomeParkingState extends State<HomeParking> {
                   onFieldSubmitted: (value) async {
                     if (formKey.currentState!.validate()) {
                       try {
-                        await checkTarga(targaController.text);
+                        await checkTargaApi(targaController.text);
                         targaController.clear();
                         navigatorKey.currentState!.pop();
                         navigatorKey.currentState!.pushReplacement(

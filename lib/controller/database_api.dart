@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import '../main.dart';
 import '../model/db_model.dart';
+import '../pages/error.dart';
 
-String baseUrl = "http://apidbpark.iceiy.com/";
+String baseUrl = "https://apidbpark.iceiy.com";
 
 // inserisce una targa con la data di entrata
 Future<void> inserTargaApi(String targa, String dataEntrata,
@@ -31,7 +33,9 @@ Future<void> inserTargaApi(String targa, String dataEntrata,
   }
 
   if (response.statusCode != 200) {
-    //todo: errore
+    navigatorKey.currentState!.push(MaterialPageRoute(
+        builder: (context) =>
+            ErrorPage(message: "Errore nell inserire la targa")));
   }
 }
 
@@ -40,12 +44,14 @@ Future<void> deleteTargaApi(int id) async {
   http.Response response = await http.post(
     Uri.parse('$baseUrl/delete.php'),
     body: {
-      "id": id,
+      "id": "$id",
     },
   );
 
   if (response.statusCode != 200) {
-    //todo: errore
+    navigatorKey.currentState!.push(MaterialPageRoute(
+        builder: (context) =>
+            ErrorPage(message: "Errore nell inserire la targa")));
   }
 }
 
@@ -54,18 +60,20 @@ Future<void> updateTargaApi(int id, String dataUscita) async {
   http.Response response = await http.post(
     Uri.parse('$baseUrl/update-uscita.php'),
     body: {
-      "id": id,
+      "id": "$id",
       "dataUscita": dataUscita,
     },
   );
 
   if (response.statusCode != 200) {
-    //todo: errore
+    navigatorKey.currentState!.push(MaterialPageRoute(
+        builder: (context) =>
+            ErrorPage(message: "Errore nell inserire la targa")));
   }
 }
 
 // aggiorna una targa completamente
-Future<void> updateFullTarga(
+Future<void> updateFullTargaApi(
     {required int id,
     String? dataUscita,
     required String dataEntrata,
@@ -76,7 +84,7 @@ Future<void> updateFullTarga(
     response = await http.post(
       Uri.parse('$baseUrl/update.php'),
       body: {
-        "id": id,
+        "id": "$id",
         "targa": targa,
         "dataEntrata": dataEntrata,
       },
@@ -85,7 +93,7 @@ Future<void> updateFullTarga(
     response = await http.post(
       Uri.parse('$baseUrl/update.php'),
       body: {
-        "id": id,
+        "id": "$id",
         "targa": targa,
         "dataEntrata": dataEntrata,
         "dataUscita": dataUscita,
@@ -94,41 +102,43 @@ Future<void> updateFullTarga(
   }
 
   if (response.statusCode != 200) {
-    //todo: errore
+    navigatorKey.currentState!.push(MaterialPageRoute(
+        builder: (context) =>
+            ErrorPage(message: "Errore nell inserire la targa")));
   }
 }
 
 // ritorna tutte le targhe dal database
-Future<List<TargaModel>> getTarghe() async {
+Future<List<TargaModel>> getTargheApi() async {
   List<TargaModel> list = [];
 
   http.Response response = await http.post(
-    Uri.parse('$baseUrl/update-uscita.php'),
+    Uri.parse('$baseUrl/read.php'),
   );
 
-  var results = [];
+  if (response.statusCode != 200) {
+    navigatorKey.currentState!.push(MaterialPageRoute(
+        builder: (context) =>
+            ErrorPage(message: "Errore nell inserire la targa")));
+  }
 
-  for (var row in results) {
-    String targa = row["targa"].toString();
-    String dataUscita = row["dataUscita"].toString();
-    String dataEntrata = row["dataEntrata"].toString();
-    int id = row["id"];
+  List<dynamic> results = jsonDecode(response.body);
 
-    list.add(
-      TargaModel(
-        targa: targa,
-        dataEntrata: dataEntrata,
-        dataUscita: dataUscita,
-        id: id,
-      ),
+  for (Map<String, dynamic> row in results) {
+    TargaModel targa = TargaModel(
+      targa: row["targa"],
+      dataEntrata: row["dataEntrata"],
+      id: row["id"],
+      dataUscita: row["dataUscita"] ?? "null",
     );
+    list.add(targa);
   }
 
   return list;
 }
 
 // ritorna tutte le righe con la targa data dal database
-Future<List<TargaModel>> getOnlyTarghe(String targa) async {
+Future<List<TargaModel>> getOnlyTargheApi(String targa) async {
   List<TargaModel> list = [];
 
   http.Response response = await http.post(
@@ -138,35 +148,29 @@ Future<List<TargaModel>> getOnlyTarghe(String targa) async {
     },
   );
 
-  var results = [];
+  List<dynamic> results = jsonDecode(response.body);
 
-  for (var row in results) {
-    String targa = row["targa"].toString();
-    String dataUscita = row["dataUscita"].toString();
-    String dataEntrata = row["dataEntrata"].toString();
-    int id = row["id"];
-
-    list.add(
-      TargaModel(
-        targa: targa,
-        dataEntrata: dataEntrata,
-        dataUscita: dataUscita,
-        id: id,
-      ),
+  for (Map<String, dynamic> row in results) {
+    TargaModel targa = TargaModel(
+      targa: row["targa"],
+      dataEntrata: row["dataEntrata"],
+      id: row["id"],
+      dataUscita: row["dataUscita"] ?? "null",
     );
+    list.add(targa);
   }
 
   return list;
 }
 
 // controlla se una trga è gia uscita
-Future<void> checkTarga(String targaDaControllare) async {
+Future<void> checkTargaApi(String targaDaControllare) async {
   DateTime now = DateTime.now();
   String actualDate =
       "${now.day}-${now.month}-${now.year} ${now.hour}:${now.minute}:${now.second}";
 
   // ritorna righe con quella targa
-  var results = await getOnlyTarghe(targaDaControllare);
+  var results = await getOnlyTargheApi(targaDaControllare);
   bool lastIsFilled = false;
 
   if (results.isNotEmpty) {
@@ -175,7 +179,7 @@ Future<void> checkTarga(String targaDaControllare) async {
     for (var row in results) {
       String targa = row.targa;
       String? dataUscita = row.dataUscita;
-      int id = row.id!;
+      int id = row.id;
 
       // controlla se la targa corrisponde e la data di uscita è gia settata
       if (targa.toUpperCase() == targaDaControllare.toUpperCase() &&

@@ -1,8 +1,8 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:mysql1/mysql1.dart';
+import 'package:parking_app/controller/database_api.dart';
 import 'package:parking_app/pages/home.dart';
-import '../controller/database.dart';
 import '../model/db_model.dart';
 import 'error.dart';
 
@@ -20,16 +20,9 @@ class _AdminViewState extends State<AdminView> {
   void initState() {
     super.initState();
 
-    try {
-      setState(() {
-        targhe = getTarghe();
-      });
-    } on MySqlException catch (e) {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => ErrorPage(message: e.message)));
-    }
+    setState(() {
+      targhe = getTargheApi();
+    });
   }
 
   @override
@@ -37,9 +30,11 @@ class _AdminViewState extends State<AdminView> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white60,
-        title:  Container(
+        title: Container(
           width: 300,
-          child: Image.asset('lib/assets/logo-3.png', ),
+          child: Image.asset(
+            'lib/assets/logo-3.png',
+          ),
         ),
         centerTitle: true,
         automaticallyImplyLeading: false,
@@ -136,8 +131,8 @@ class _AdminViewState extends State<AdminView> {
                                         TextButton(
                                           onPressed: () async {
                                             try {
-                                              await deleteTarga(
-                                                  snapshot.data![index].id!);
+                                              await deleteTargaApi(
+                                                  snapshot.data![index].id);
 
                                               Navigator.pop(context);
                                               Navigator.push(
