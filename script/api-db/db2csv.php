@@ -18,13 +18,13 @@ $where = '';
 $csv_filename = 'file/targhe-'.date('Y-m-d').'.csv';
 
 // database variables
-$hostname = "sql109.iceiy.com";
-$user = "icei_33699746";
-$password ="lollo1234";
-$database = "icei_33699746_targhe";
+$servername = "sql8.freesqldatabase.com";
+$username = "sql8601691";
+$password = "jFU9cp86E8";
+$db = "sql8601691";
 
 // Database connecten voor alle services
-$conn = mysqli_connect($hostname, $user, $password, $database);
+$conn = mysqli_connect($servername, $username, $password, $db);
   
 if (!$conn) {
   die("Connection failed: " . mysqli_connect_error());
