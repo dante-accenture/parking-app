@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:parking_app/pages/admin.dart';
 import 'package:parking_app/pages/edit.dart';
-import 'package:parking_app/pages/home.dart';
 import 'package:parking_app/pages/select_user.dart';
 
 import 'model/db_model.dart';
@@ -31,7 +29,6 @@ class MyApp extends StatelessWidget {
         ),
         routes: {
           "/": (context) => const SelectUserPage(),
-          "/user": (context) => HomeParking(false),
         },
         onGenerateRoute: (settings) {
           if (settings.name == "/edit") {

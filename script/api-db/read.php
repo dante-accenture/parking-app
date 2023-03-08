@@ -13,7 +13,7 @@ if (mysqli_num_rows($result) > 0) {
   $arrayTarg = array();
 
   while ($row = mysqli_fetch_assoc($result)) {
-    $targa = array("id" => (int)$row["id"], "targa" => $row["targa"], "dataEntrata" => $row["dataEntrata"], "dataUscita" => $row["dataUscita"]);
+    $targa = array("id" => (int)$row["id"], "targa" => $row["targa"], "dataEntrata" => $row["dataEntrata"], "ticket" => $row["ticket"]);
 
     array_push($arrayTarg, $targa);
   }

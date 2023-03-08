@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mysql1/mysql1.dart';
 import 'package:parking_app/controller/database_api.dart';
-import 'package:parking_app/pages/error.dart';
 
 import '../model/db_model.dart';
 import 'admin.dart';
@@ -118,21 +116,13 @@ class _EditPageState extends State<EditPage> {
                     onPressed: () async {
                       if (targaController.text.isNotEmpty &&
                           entrtaController.text.isNotEmpty) {
-                        try {
-                          await updateFullTargaApi(
-                              id: widget.targaModel.id,
-                              dataEntrata: entrtaController.text,
-                              targa: targaController.text,
-                              dataUscita: uscitaController.text.isEmpty == true
-                                  ? "null"
-                                  : uscitaController.text);
-                        } on MySqlException catch (e) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      ErrorPage(message: e.message)));
-                        }
+                        await updateFullTargaApi(
+                            id: widget.targaModel.id,
+                            dataEntrata: entrtaController.text,
+                            targa: targaController.text,
+                            dataUscita: uscitaController.text.isEmpty == true
+                                ? "null"
+                                : uscitaController.text);
                         ScaffoldMessenger.of(context)
                             .showSnackBar(const SnackBar(
                           content: Text("Dati aggiornati correttamente"),

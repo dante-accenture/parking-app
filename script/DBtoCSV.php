@@ -33,7 +33,7 @@ if (!$conn) {
 $csv_export = '';
 
 // query to get data from database
-$query = mysqli_query($conn, "SELECT * FROM ".$db_record." ".$where);
+$query = mysqli_query($conn, "SELECT targa, ticket, dataEntrata FROM ".$db_record." ".$where);
 $field = mysqli_num_fields($query);
 
 // create line with field names

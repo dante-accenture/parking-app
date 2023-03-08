@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:parking_app/pages/admin.dart';
-import 'package:parking_app/pages/home.dart';
+import 'package:parking_app/pages/insert_ticket.dart';
 
 class SelectUserPage extends StatefulWidget {
   const SelectUserPage({Key? key}) : super(key: key);
@@ -38,7 +38,7 @@ class _SelectUserPageState extends State<SelectUserPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => HomeParking(false)),
+                          builder: (context) => InsertTicketPage(false)),
                     );
                   },
                   child: const Text("UTENTE", style: TextStyle(fontSize: 20))),

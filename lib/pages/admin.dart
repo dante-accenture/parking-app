@@ -1,10 +1,8 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
-import 'package:mysql1/mysql1.dart';
 import 'package:parking_app/controller/database_api.dart';
-import 'package:parking_app/pages/home.dart';
+import 'package:parking_app/pages/insert_ticket.dart';
 import '../model/db_model.dart';
-import 'error.dart';
 
 class AdminView extends StatefulWidget {
   const AdminView({Key? key}) : super(key: key);
@@ -41,8 +39,10 @@ class _AdminViewState extends State<AdminView> {
         actions: [
           IconButton(
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => HomeParking(true)));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => InsertTicketPage(true)));
               },
               color: Colors.blue[900],
               icon: const Icon(Icons.add))
@@ -130,25 +130,17 @@ class _AdminViewState extends State<AdminView> {
                                         ),
                                         TextButton(
                                           onPressed: () async {
-                                            try {
-                                              await deleteTargaApi(
-                                                  snapshot.data![index].id);
+                                            await deleteTargaApi(
+                                              snapshot.data![index].id,
+                                            );
 
-                                              Navigator.pop(context);
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          const AdminView()));
-                                            } on MySqlException catch (e) {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          ErrorPage(
-                                                              message:
-                                                                  e.message)));
-                                            }
+                                            Navigator.pop(context);
+
+                                            Navigator.pushReplacement(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const AdminView()));
                                           },
                                           child: const Text('ELIMINA'),
                                         ),

@@ -7,7 +7,7 @@ import '../main.dart';
 import '../model/db_model.dart';
 import '../pages/error.dart';
 
-String baseUrl = "https://apidbpark.iceiy.com";
+String baseUrl = "https://apidbpark.000webhostapp.com/api/";
 
 // inserisce una targa con la data di entrata
 Future<void> inserTargaApi(String targa, String dataEntrata,
@@ -16,18 +16,30 @@ Future<void> inserTargaApi(String targa, String dataEntrata,
   if (dataUscita == null) {
     response = await http.post(
       Uri.parse('$baseUrl/insert.php'),
+      headers: {"Access-Control-Allow-Origin": "*"},
       body: {
         "targa": targa,
         "dataEntrata": dataEntrata,
+      },
+    ).timeout(
+      const Duration(seconds: 3),
+      onTimeout: () {
+        return http.Response('TimeOut', 408);
       },
     );
   } else {
     response = await http.post(
       Uri.parse('$baseUrl/insert.php'),
+      headers: {"Access-Control-Allow-Origin": "*"},
       body: {
         "targa": targa,
         "dataEntrata": dataEntrata,
         "dataUscita": dataUscita,
+      },
+    ).timeout(
+      const Duration(seconds: 3),
+      onTimeout: () {
+        return http.Response('TimeOut', 408);
       },
     );
   }
@@ -43,8 +55,14 @@ Future<void> inserTargaApi(String targa, String dataEntrata,
 Future<void> deleteTargaApi(int id) async {
   http.Response response = await http.post(
     Uri.parse('$baseUrl/delete.php'),
+    headers: {"Access-Control-Allow-Origin": "*"},
     body: {
       "id": "$id",
+    },
+  ).timeout(
+    const Duration(seconds: 3),
+    onTimeout: () {
+      return http.Response('TimeOut', 408);
     },
   );
 
@@ -59,9 +77,15 @@ Future<void> deleteTargaApi(int id) async {
 Future<void> updateTargaApi(int id, String dataUscita) async {
   http.Response response = await http.post(
     Uri.parse('$baseUrl/update-uscita.php'),
+    headers: {"Access-Control-Allow-Origin": "*"},
     body: {
       "id": "$id",
       "dataUscita": dataUscita,
+    },
+  ).timeout(
+    const Duration(seconds: 3),
+    onTimeout: () {
+      return http.Response('TimeOut', 408);
     },
   );
 
@@ -83,20 +107,32 @@ Future<void> updateFullTargaApi(
   if (dataUscita == null) {
     response = await http.post(
       Uri.parse('$baseUrl/update.php'),
+      headers: {"Access-Control-Allow-Origin": "*"},
       body: {
         "id": "$id",
         "targa": targa,
         "dataEntrata": dataEntrata,
       },
+    ).timeout(
+      const Duration(seconds: 3),
+      onTimeout: () {
+        return http.Response('TimeOut', 408);
+      },
     );
   } else {
     response = await http.post(
       Uri.parse('$baseUrl/update.php'),
+      headers: {"Access-Control-Allow-Origin": "*"},
       body: {
         "id": "$id",
         "targa": targa,
         "dataEntrata": dataEntrata,
         "dataUscita": dataUscita,
+      },
+    ).timeout(
+      const Duration(seconds: 3),
+      onTimeout: () {
+        return http.Response('TimeOut', 408);
       },
     );
   }
@@ -114,6 +150,12 @@ Future<List<TargaModel>> getTargheApi() async {
 
   http.Response response = await http.post(
     Uri.parse('$baseUrl/read.php'),
+    headers: {"Access-Control-Allow-Origin": "*"},
+  ).timeout(
+    const Duration(seconds: 3),
+    onTimeout: () {
+      return http.Response('TimeOut', 408);
+    },
   );
 
   if (response.statusCode != 200) {
@@ -130,6 +172,7 @@ Future<List<TargaModel>> getTargheApi() async {
       dataEntrata: row["dataEntrata"],
       id: row["id"],
       dataUscita: row["dataUscita"] ?? "null",
+      ticket: row["ticket"] ?? "null",
     );
     list.add(targa);
   }
@@ -143,8 +186,18 @@ Future<List<TargaModel>> getOnlyTargheApi(String targa) async {
 
   http.Response response = await http.post(
     Uri.parse('$baseUrl/get-targhe.php'),
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "user-agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36",
+    },
     body: {
       "targa": targa,
+    },
+  ).timeout(
+    const Duration(seconds: 3),
+    onTimeout: () {
+      return http.Response('TimeOut', 408);
     },
   );
 
@@ -156,6 +209,7 @@ Future<List<TargaModel>> getOnlyTargheApi(String targa) async {
       dataEntrata: row["dataEntrata"],
       id: row["id"],
       dataUscita: row["dataUscita"] ?? "null",
+      ticket: row["ticket"] ?? "null",
     );
     list.add(targa);
   }
@@ -206,5 +260,90 @@ Future<void> checkTargaApi(String targaDaControllare) async {
   } else {
     // nessuna targa trovata, inserisce la targa
     await inserTargaApi(targaDaControllare.toUpperCase(), actualDate);
+  }
+}
+
+// ottieni tutte le targhr con lo stesso ticket
+Future<List<TargaModel>> getOnlyTicketApi(String ticket) async {
+  List<TargaModel> list = [];
+
+  http.Response response = await http.post(
+    Uri.parse('$baseUrl/get-ticket.php'),
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "user-agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36",
+    },
+    body: {
+      "ticket": ticket,
+    },
+  ).timeout(
+    const Duration(seconds: 3),
+    onTimeout: () {
+      return http.Response('TimeOut', 408);
+    },
+  );
+
+  if (response.statusCode != 200) {
+    navigatorKey.currentState!.push(MaterialPageRoute(
+        builder: (context) =>
+            ErrorPage(message: "Errore nell controllare il ticket")));
+  }
+
+  List<dynamic> results = jsonDecode(response.body);
+
+  for (Map<String, dynamic> row in results) {
+    TargaModel targa = TargaModel(
+      targa: row["targa"],
+      dataEntrata: row["dataEntrata"],
+      id: row["id"],
+      dataUscita: row["dataUscita"] ?? "null",
+      ticket: row["ticket"] ?? "null",
+    );
+    list.add(targa);
+  }
+
+  return list;
+}
+
+// inserisci una targa associata al ticket
+Future<void> insertAPIticket(String targa, String ticket) async {
+  DateTime now = DateTime.now();
+  String actualDate =
+      "${now.day}-${now.month}-${now.year} ${now.hour}:${now.minute}:${now.second}";
+
+  var results = await getOnlyTicketApi(ticket);
+
+  // ticket gia esistente
+  if (results.isEmpty) {
+    navigatorKey.currentState!.push(MaterialPageRoute(
+        builder: (context) =>
+            ErrorPage(message: "Il ticket è gia esistente!")));
+  } else {
+    // inserisci targa con ticket
+    http.Response response = await http.post(
+      Uri.parse('$baseUrl/add-ticket.php'),
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "user-agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36",
+      },
+      body: {
+        "ticket": ticket,
+        "targa": targa,
+        "dataEntrata": actualDate,
+      },
+    ).timeout(
+      const Duration(seconds: 3),
+      onTimeout: () {
+        return http.Response('TimeOut', 408);
+      },
+    );
+
+    if (response.statusCode != 200) {
+      navigatorKey.currentState!.push(MaterialPageRoute(
+          builder: (context) =>
+              ErrorPage(message: "Errore nell inserire il ticket")));
+    }
   }
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:parking_app/controller/database_api.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import '../main.dart';
-import '../pages/home.dart';
+import '../pages/insert_targa.dart';
 import 'input_control.dart';
 import 'layout.dart';
 

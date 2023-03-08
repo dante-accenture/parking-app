@@ -84,6 +84,7 @@ Future<List<TargaModel>> getTarghe() async {
         targa: targa,
         dataEntrata: dataEntrata,
         dataUscita: dataUscita,
+        ticket: "null",
         id: id));
   }
   await conn.close();

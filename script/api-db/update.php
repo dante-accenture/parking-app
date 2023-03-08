@@ -11,12 +11,12 @@ include "connect.php";
 
 
 
-if (isset($_POST["id"]) && isset($_POST["targa"]) && isset($_POST["dataEntrata"]) && isset($_POST["dataUscita"])) {
+if (isset($_POST["id"]) && isset($_POST["targa"]) && isset($_POST["dataEntrata"]) && isset($_POST["ticket"])) {
   $id = $_POST["id"];
   $dataE = $_POST["dataEntrata"];
   $targa = $_POST["targa"];
-  $dataU = $_POST["dataUscita"];
-  $sql = "UPDATE targhe SET dataUscita='" . $dataU . "', targa='" . $targa . "', dataEntrata='" . $dataE . "' WHERE id=" . (int)$id;
+  $ticket = $_POST["ticket"];
+  $sql = "UPDATE targhe SET ticket='" . $ticket . "', targa='" . $targa . "', dataEntrata='" . $dataE . "' WHERE id=" . (int)$id;
 
   if (mysqli_query($conn, $sql)) {
     http_response_code(200);
