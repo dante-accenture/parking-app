@@ -15,7 +15,7 @@ if (isset($_POST["targa"]) && isset($_POST["dataEntrata"]) && isset($_POST["tick
   $ticket = $_POST["ticket"];
 
   $sql = "INSERT INTO targhe (targa, dataEntrata, ticket, dataUscita)
-VALUES ('" . $targa . "', '" . $dataE . "', " . $ticket. "', ";
+VALUES ('" . $targa . "', '" . $dataE . "', '" . $ticket. "', ";
 
   if (isset($_POST["dataUscita"])) {
     $dataU = $_POST["dataUscita"];
