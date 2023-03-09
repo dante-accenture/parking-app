@@ -40,6 +40,9 @@ dependencies:
   data_table_2: ^2.3.12
   rflutter_alert: ^2.0.4
   http: ^0.13.5
+  path_provider: ^2.0.13
+  filesystem_picker: ^3.1.0
+  qr_code_scanner: ^1.0.1
 
 dev_dependencies:
   flutter_test:
@@ -69,6 +72,7 @@ flutter:
      - lib/assets/logo-2.png
      - lib/assets/logo-3.png
      - lib/assets/logo-tondo.png
+     - lib/assets/
 
 
 
