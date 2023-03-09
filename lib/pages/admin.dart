@@ -1,6 +1,7 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:parking_app/controller/database_api.dart';
+import 'package:parking_app/controller/file_downloader.dart';
 import 'package:parking_app/pages/insert_ticket.dart';
 import '../model/db_model.dart';
 
@@ -28,10 +29,19 @@ class _AdminViewState extends State<AdminView> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white60,
-        title: Container(
+        title: SizedBox(
           width: 300,
           child: Image.asset(
             'lib/assets/logo-3.png',
+          ),
+        ),
+        leading: IconButton(
+          onPressed: () async {
+            await downloadFileCSV();
+          },
+          icon: Icon(
+            Icons.download,
+            color: Colors.blue[900],
           ),
         ),
         centerTitle: true,
@@ -42,7 +52,7 @@ class _AdminViewState extends State<AdminView> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => InsertTicketPage(true)));
+                        builder: (context) => InsertTicketPage(false)));
               },
               color: Colors.blue[900],
               icon: const Icon(Icons.add))
@@ -68,8 +78,7 @@ class _AdminViewState extends State<AdminView> {
                             style: TextStyle(fontSize: 20)),
                       ),
                       DataColumn(
-                        label:
-                            Text('Data Uscita', style: TextStyle(fontSize: 20)),
+                        label: Text('Ticket', style: TextStyle(fontSize: 20)),
                       ),
                       DataColumn(
                         label: Text('Modifica', style: TextStyle(fontSize: 20)),
@@ -87,9 +96,9 @@ class _AdminViewState extends State<AdminView> {
                           DataCell(Text(snapshot.data![index].dataEntrata,
                               style: const TextStyle(fontSize: 20))),
                           DataCell(Text(
-                              snapshot.data![index].dataUscita! == "null"
+                              snapshot.data![index].ticket == "null"
                                   ? "N/D"
-                                  : snapshot.data![index].dataUscita!,
+                                  : snapshot.data![index].ticket,
                               style: const TextStyle(fontSize: 20))),
                           DataCell(
                               const Text("Clicca per modificare",

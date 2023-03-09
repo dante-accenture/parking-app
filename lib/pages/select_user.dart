@@ -38,7 +38,7 @@ class _SelectUserPageState extends State<SelectUserPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => InsertTicketPage(false)),
+                          builder: (context) => InsertTicketPage(true)),
                     );
                   },
                   child: const Text("UTENTE", style: TextStyle(fontSize: 20))),

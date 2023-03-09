@@ -2,12 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:parking_app/pages/edit.dart';
 import 'package:parking_app/pages/select_user.dart';
+import 'package:parking_app/pages/qr_scanner.dart';
 
 import 'model/db_model.dart';
 
 void main() {
   runApp(const MyApp());
 }
+
+TextEditingController targaController = TextEditingController();
+TextEditingController ticketController = TextEditingController();
+var formKeyTarga = GlobalKey<FormState>();
+var formKeyTicket = GlobalKey<FormState>();
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 

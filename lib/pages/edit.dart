@@ -17,6 +17,7 @@ class _EditPageState extends State<EditPage> {
   TextEditingController targaController = TextEditingController();
   TextEditingController uscitaController = TextEditingController();
   TextEditingController entrtaController = TextEditingController();
+  TextEditingController ticketController = TextEditingController();
 
   @override
   void initState() {
@@ -25,9 +26,8 @@ class _EditPageState extends State<EditPage> {
     setState(() {
       targaController.text = widget.targaModel.targa;
       entrtaController.text = widget.targaModel.dataEntrata;
-      uscitaController.text = widget.targaModel.dataUscita == "null"
-          ? ""
-          : widget.targaModel.dataUscita!;
+      ticketController.text =
+          widget.targaModel.ticket == "null" ? "" : widget.targaModel.ticket;
     });
   }
 
@@ -59,101 +59,103 @@ class _EditPageState extends State<EditPage> {
               MaterialPageRoute(builder: (context) => const AdminView()));
           return true;
         },
-        child: Form(
-            child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
+        child: SingleChildScrollView(
+          child: Form(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  TextFormField(
-                    controller: targaController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      label: Text(
-                        'Targa',
-                        style: TextStyle(color: Colors.black),
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    TextFormField(
+                      controller: targaController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        label: Text(
+                          'Targa',
+                          style: TextStyle(color: Colors.black),
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 30),
-                  TextFormField(
-                    controller: entrtaController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      label: Text(
-                        'Data Entrata',
-                        style: TextStyle(color: Colors.black),
+                    const SizedBox(height: 30),
+                    TextFormField(
+                      controller: entrtaController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        label: Text(
+                          'Data Entrata',
+                          style: TextStyle(color: Colors.black),
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 30),
-                  TextFormField(
-                    controller: uscitaController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      label: Text(
-                        'Data Uscita',
-                        style: TextStyle(color: Colors.black),
+                    const SizedBox(height: 30),
+                    TextFormField(
+                      controller: ticketController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        label: Text(
+                          'Ticket',
+                          style: TextStyle(color: Colors.black),
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue[900]),
-                    onPressed: () async {
-                      if (targaController.text.isNotEmpty &&
-                          entrtaController.text.isNotEmpty) {
-                        await updateFullTargaApi(
-                            id: widget.targaModel.id,
-                            dataEntrata: entrtaController.text,
-                            targa: targaController.text,
-                            dataUscita: uscitaController.text.isEmpty == true
-                                ? "null"
-                                : uscitaController.text);
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(const SnackBar(
-                          content: Text("Dati aggiornati correttamente"),
-                        ));
-                        Navigator.pop(context);
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const AdminView()));
-                      } else {
-                        showDialog<String>(
-                            context: context,
-                            builder: (BuildContext context) => AlertDialog(
-                                  title: const Text('Attenzione!'),
-                                  content: const Text(
-                                      'I campi TARGA e DATA ENTRATA sono obbligatori.'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () =>
-                                          Navigator.pop(context, 'OK'),
-                                      child: const Text('OK'),
-                                    ),
-                                  ],
-                                ));
-                      }
-                    },
-                    child: const Text("Salva")),
-              ],
-            )
-          ],
-        )),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue[900]),
+                      onPressed: () async {
+                        if (targaController.text.isNotEmpty &&
+                            entrtaController.text.isNotEmpty) {
+                          await updateFullTargaApi(
+                              id: widget.targaModel.id,
+                              dataEntrata: entrtaController.text,
+                              targa: targaController.text,
+                              ticket: ticketController.text.isEmpty == true
+                                  ? "null"
+                                  : ticketController.text);
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                            content: Text("Dati aggiornati correttamente"),
+                          ));
+                          Navigator.pop(context);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const AdminView()));
+                        } else {
+                          showDialog<String>(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                    title: const Text('Attenzione!'),
+                                    content: const Text(
+                                        'I campi TARGA e DATA ENTRATA sono obbligatori.'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context, 'OK'),
+                                        child: const Text('OK'),
+                                      ),
+                                    ],
+                                  ));
+                        }
+                      },
+                      child: const Text("Salva")),
+                ],
+              )
+            ],
+          )),
+        ),
       ),
     );
   }

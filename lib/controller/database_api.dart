@@ -7,7 +7,7 @@ import '../main.dart';
 import '../model/db_model.dart';
 import '../pages/error.dart';
 
-String baseUrl = "https://apidbpark.000webhostapp.com/api/";
+String baseUrl = "https://apidbpark.000webhostapp.com/api";
 
 // inserisce una targa con la data di entrata
 Future<void> inserTargaApi(String targa, String dataEntrata,
@@ -101,6 +101,7 @@ Future<void> updateFullTargaApi(
     {required int id,
     String? dataUscita,
     required String dataEntrata,
+    required String ticket,
     required String targa}) async {
   http.Response response;
 
@@ -112,6 +113,7 @@ Future<void> updateFullTargaApi(
         "id": "$id",
         "targa": targa,
         "dataEntrata": dataEntrata,
+        "ticket": ticket,
       },
     ).timeout(
       const Duration(seconds: 3),
@@ -128,6 +130,7 @@ Future<void> updateFullTargaApi(
         "targa": targa,
         "dataEntrata": dataEntrata,
         "dataUscita": dataUscita,
+        "ticket": ticket,
       },
     ).timeout(
       const Duration(seconds: 3),
@@ -284,6 +287,8 @@ Future<List<TargaModel>> getOnlyTicketApi(String ticket) async {
     },
   );
 
+  print(response.statusCode);
+
   if (response.statusCode != 200) {
     navigatorKey.currentState!.push(MaterialPageRoute(
         builder: (context) =>
@@ -315,14 +320,14 @@ Future<void> insertAPIticket(String targa, String ticket) async {
   var results = await getOnlyTicketApi(ticket);
 
   // ticket gia esistente
-  if (results.isEmpty) {
+  if (results.isNotEmpty) {
     navigatorKey.currentState!.push(MaterialPageRoute(
         builder: (context) =>
             ErrorPage(message: "Il ticket è gia esistente!")));
   } else {
     // inserisci targa con ticket
     http.Response response = await http.post(
-      Uri.parse('$baseUrl/add-ticket.php'),
+      Uri.parse('$baseUrl/insert-ticket.php'),
       headers: {
         "Access-Control-Allow-Origin": "*",
         "user-agent":
@@ -336,9 +341,11 @@ Future<void> insertAPIticket(String targa, String ticket) async {
     ).timeout(
       const Duration(seconds: 3),
       onTimeout: () {
-        return http.Response('TimeOut', 408);
+        return http.Response('{TimeOut}', 408);
       },
     );
+
+    print(response.statusCode);
 
     if (response.statusCode != 200) {
       navigatorKey.currentState!.push(MaterialPageRoute(
