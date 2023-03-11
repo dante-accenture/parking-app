@@ -42,7 +42,7 @@ dependencies:
   http: ^0.13.5
   path_provider: ^2.0.13
   filesystem_picker: ^3.1.0
-  qr_code_scanner: ^1.0.1
+  #qr_code_scanner: ^1.0.1
 
 dev_dependencies:
   flutter_test:

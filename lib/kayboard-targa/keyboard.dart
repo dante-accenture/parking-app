@@ -3,7 +3,6 @@ import 'package:parking_app/controller/database_api.dart';
 import 'package:parking_app/pages/insert_ticket.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import '../main.dart';
-import '../pages/insert_targa.dart';
 import 'input_control.dart';
 import 'layout.dart';
 
@@ -89,11 +88,13 @@ class VirtualKeyboardRow extends StatelessWidget {
                   BoxDecoration(border: Border.all(color: Colors.black)),
               child: RawMaterialButton(
                 onPressed: _enabled
-                    ? key == "CANC."
-                        ? () => handleBackspace()
-                        : key == "INVIO"
-                            ? () => handleEnter()
-                            : () => _onInput(key)
+                    ? key == "INDIETRO"
+                        ? () => handleIndietro()
+                        : key == "CANC."
+                            ? () => handleBackspace()
+                            : key == "INVIO"
+                                ? () => handleEnter()
+                                : () => handleInput(key)
                     : null,
                 child: Center(
                     child: Text(key,
@@ -113,17 +114,7 @@ class VirtualKeyboardRow extends StatelessWidget {
 void handleBackspace() {
   final controller = targaController;
   if (controller.text.isNotEmpty) {
-    final value = controller.value;
-    final selection = controller.selection;
-
-    // erase selection vs. previous char
-    final start = selection.isCollapsed ? selection.start - 1 : selection.start;
-    final text = value.text.replaceRange(start, selection.end, '');
-
-    controller.value = value.copyWith(
-      text: text,
-      selection: TextSelection.collapsed(offset: start),
-    );
+    controller.text = controller.text.substring(0, controller.text.length - 1);
   }
 }
 
@@ -134,12 +125,9 @@ void handleEnter() async {
     ticketController.clear();
     formKeyTarga = GlobalKey<FormState>();
     formKeyTicket = GlobalKey<FormState>();
-    navigatorKey.currentState!
-        .push(MaterialPageRoute(builder: (context) => InsertTicketPage(true)));
+    navigatorKey.currentState!.pushReplacement(
+        MaterialPageRoute(builder: (context) => InsertTicketPage(true)));
 
-    Future.delayed(const Duration(seconds: 4), () {
-      Navigator.pop(navigatorKey.currentContext!);
-    });
     Alert(
       context: navigatorKey.currentContext!,
       type: AlertType.success,
@@ -148,5 +136,19 @@ void handleEnter() async {
       buttons: [],
       closeIcon: const SizedBox.shrink(),
     ).show();
+    Future.delayed(const Duration(seconds: 4), () {
+      Navigator.pushReplacement(navigatorKey.currentContext!,
+          MaterialPageRoute(builder: (context) => InsertTicketPage(true)));
+    });
   }
+}
+
+void handleIndietro() {
+  targaController.clear();
+  navigatorKey.currentState!.pop();
+}
+
+void handleInput(String key) {
+  targaController.text += key;
+  targaController.selection.end;
 }

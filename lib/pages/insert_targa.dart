@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:parking_app/widget/3em_banner.dart';
 
 import '../controller/database_api.dart';
 import '../kayboard-targa/keyboard.dart';
@@ -28,37 +29,25 @@ class _TargaInsertPageState extends State<TargaInsertPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xffffffff),
-      appBar: AppBar(
-        backgroundColor: Colors.white60,
-        elevation: 4,
-        centerTitle: true,
-        automaticallyImplyLeading: true,
-        title: SizedBox(
-          width: 300,
-          child: Image.asset(
-            'lib/assets/logo-3.png',
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          const TreEMbanner(),
+          const Text(
+            "INSERIRE NUMERO DI TARGA:",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 45,
+            ),
           ),
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            const SizedBox(height: 30),
-            const Text("ATTENZIONE A METTERE LA TARGA!",
-                style: TextStyle(
-                    color: Colors.red,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 25)),
-            const SizedBox(height: 20),
-            Form(
-              key: formKeyTarga,
+          Form(
+            key: formKeyTarga,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
               child: TextFormField(
                 controller: targaController,
                 textAlign: TextAlign.center,
+                showCursor: false,
                 maxLines: 1,
                 focusNode: focus,
                 style: const TextStyle(
@@ -86,7 +75,7 @@ class _TargaInsertPageState extends State<TargaInsertPage> {
                   labelStyle: const TextStyle(
                     fontWeight: FontWeight.w400,
                     fontStyle: FontStyle.normal,
-                    fontSize: 24,
+                    fontSize: 25,
                     color: Color(0xff000000),
                   ),
                   filled: false,
@@ -117,14 +106,13 @@ class _TargaInsertPageState extends State<TargaInsertPage> {
                 },
               ),
             ),
-            const SizedBox(height: 20),
-            const Text("Premi INVIO per confermare e CANC. per eliminare",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
-            widget.showKeyboard == false
-                ? const SizedBox.shrink()
-                : VirtualKeyboard(),
-          ],
-        ),
+          ),
+          const Text("Premi INVIO per confermare e CANC. per eliminare",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
+          widget.showKeyboard == false
+              ? const SizedBox.shrink()
+              : VirtualKeyboard(),
+        ],
       ),
     );
   }

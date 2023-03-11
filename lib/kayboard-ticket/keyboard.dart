@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:parking_app/controller/database_api.dart';
+import 'package:parking_app/pages/insert_ticket.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import '../main.dart';
-import '../pages/error.dart';
 import '../pages/insert_targa.dart';
 import 'input_control.dart';
 import 'layout.dart';
@@ -93,7 +93,7 @@ class VirtualKeyboardRow extends StatelessWidget {
                         ? () => handleBackspace()
                         : key == "INVIO"
                             ? () => handleEnter()
-                            : () => _onInput(key)
+                            : () => handleInput(key)
                     : null,
                 child: Center(
                     child: Text(key,
@@ -113,29 +113,50 @@ class VirtualKeyboardRow extends StatelessWidget {
 void handleBackspace() {
   final controller = ticketController;
   if (controller.text.isNotEmpty) {
-    final value = controller.value;
-    final selection = controller.selection;
-
-    // erase selection vs. previous char
-    final start = selection.isCollapsed ? selection.start - 1 : selection.start;
-    final text = value.text.replaceRange(start, selection.end, '');
-
-    controller.value = value.copyWith(
-      text: text,
-      selection: TextSelection.collapsed(offset: start),
-    );
+    controller.text = controller.text.substring(0, controller.text.length - 1);
   }
 }
 
 void handleEnter() async {
-  if (formKeyTicket.currentState!.validate()) {
+  if (RegExp(r'^[0-9]*$').hasMatch(ticketController.text) &&
+      ticketController.text.length == 4) {
     var list = await getOnlyTicketApi(ticketController.text);
     if (list.isNotEmpty) {
-      navigatorKey.currentState!.push(MaterialPageRoute(
-          builder: (context) => ErrorPage(message: "Ticket gia esistente.")));
+      ticketController.clear();
+      Alert(
+        context: navigatorKey.currentContext!,
+        type: AlertType.error,
+        title: "ERRORE",
+        desc: "Il ticket è gia stato inserito e non è più valido",
+        buttons: [],
+        closeIcon: const SizedBox.shrink(),
+      ).show();
+      Future.delayed(const Duration(seconds: 4), () {
+        Navigator.pushReplacement(navigatorKey.currentContext!,
+            MaterialPageRoute(builder: (context) => InsertTicketPage(true)));
+      });
     } else {
       navigatorKey.currentState!.push(MaterialPageRoute(
           builder: (context) => TargaInsertPage(true, ticketController.text)));
     }
+  } else {
+    ticketController.clear();
+    Alert(
+      context: navigatorKey.currentContext!,
+      type: AlertType.error,
+      title: "ERRORE",
+      desc: "Il ticket inserito non è corretto",
+      buttons: [],
+      closeIcon: const SizedBox.shrink(),
+    ).show();
+    Future.delayed(const Duration(seconds: 4), () {
+      Navigator.pushReplacement(navigatorKey.currentContext!,
+          MaterialPageRoute(builder: (context) => InsertTicketPage(true)));
+    });
   }
+}
+
+void handleInput(String key) {
+  ticketController.text += key;
+  ticketController.selection.end;
 }

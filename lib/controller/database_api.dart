@@ -321,6 +321,7 @@ Future<void> insertAPIticket(String targa, String ticket) async {
 
   // ticket gia esistente
   if (results.isNotEmpty) {
+    ticketController.clear();
     navigatorKey.currentState!.push(MaterialPageRoute(
         builder: (context) =>
             ErrorPage(message: "Il ticket è gia esistente!")));
