@@ -33,11 +33,6 @@ VALUES ('" . $targa . "', '" . $dataE . "', ";
   http_response_code(400);
 }
 
-
-
-
 mysqli_close($conn);
-
-
 
 ?>

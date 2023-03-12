@@ -18,10 +18,10 @@ $where = '';
 $csv_filename = 'file/targhe-'.date('Y-m-d').'.csv';
 
 // database variables
-$servername = "sql8.freesqldatabase.com";
-$username = "sql8601691";
-$password = "jFU9cp86E8";
-$db = "sql8601691";
+$servername = "localhost";
+$username = "id20390763_lollo1234";
+$password = "nWGgn=o0r]\zZMC3";
+$db = "id20390763_targhe";
 
 // Database connecten voor alle services
 $conn = mysqli_connect($servername, $username, $password, $db);
@@ -36,7 +36,7 @@ if (!$conn) {
 $csv_export = '';
 
 // query to get data from database
-$query = mysqli_query($conn, "SELECT * FROM ".$db_record." ".$where);
+$query = mysqli_query($conn, "SELECT targa, ticket, dataEntrata FROM ".$db_record." ".$where);
 $field = mysqli_num_fields($query);
 
 // create line with field names
@@ -60,7 +60,7 @@ mysqli_close($conn);
 // Export the data and prompt a csv file for download
 //header("Content-type: text/x-csv");
 //header("Content-Disposition: attachment; //filename=".$csv_filename."");
-echo("{'data':'". $csv_export."'}");
+echo($csv_export);
 //$myfile = fopen($csv_filename, "w") or die("Unable to open file!");
 //fwrite($myfile, $csv_export);
 //fclose($myfile);
